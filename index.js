@@ -1,20 +1,14 @@
 const dotenv = require("dotenv");
-dotenv.config({ path: 'config/config.env' });
+dotenv.config();
 
 const XLSX = require("xlsx");
 const dateFns = require("date-fns");
 const fs = require("fs");
 
-/* .env file
-IN_DIR=/Users/zumo/Downloads
-OUT_DIR=export
-FILENAME=worklogs_2023-12-01_2023-12-31-2.xlsx
-*/
-
 (() => {
     try {
-        const fileName = process.env.FILENAME;
-        const workbookExcel = XLSX.readFile(`${process.env.IN_DIR}/${fileName}`);
+        const fileName = process.env.FILE_NAME;
+        const workbookExcel = XLSX.readFile(`${process.env.WORKDIR_IN}/${fileName}`);
         const sheetName = workbookExcel.SheetNames[0];
         const sheetData = XLSX.utils.sheet_to_json(workbookExcel.Sheets[sheetName]);
 
@@ -40,7 +34,7 @@ FILENAME=worklogs_2023-12-01_2023-12-31-2.xlsx
         const dateArray = fileName.split("_")[1].split("-");
         const yearMonth = `${dateArray[0]}_${dateArray[1]}`;
         const fileNameExport = `Report JiraWorkLog - ${yearMonth}`;
-        const workDir = `${process.env.OUT_DIR}/${yearMonth}`;
+        const workDir = `${process.env.WORKDIR_OUT}/${yearMonth}`;
         if (!fs.existsSync(workDir)) {
             fs.mkdirSync(workDir, { recursive: true });
         }
